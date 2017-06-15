@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A a.html</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <a href="javascript:;" class="btn">点击了</a>
+    <script src="base.js"></script>
+    <script type="text/javascript">
+    (function(){
+        var _source = getQuery('source');
+        $(document).on('click', '.btn', function(){
+            window.opener.postMessage({
+                "status": 200,
+                "data": {
+                    "source": window.location.href
+                }
+            }, _source);
+            parent.window.close();
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A index.html</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <a href="javascript:;" class="btn">打开页面</a>
+    <p id="message"></p>
+    <script type="text/javascript">
+    (function(){
+        $(document).on('click', '.btn', function(){
+            window.open("http://127.0.0.1:3011/index.html?source="+ window.location.origin, "mywindow", "width="+ window.screen.width/2 +",height="+ window.screen.height/2);
+        });
+        
+        // Create IE + others compatible event handler
+        // 这里用了 postMessage，参见更多：https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+        function getCurrentTime(){
+            return new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
+        }
+
+        eventer(messageEvent, function(e) {
+            console.log('message：')
+            console.log(e)
+            $('#message').append("message：" + JSON.stringify(e.data) + "；时间：" + getCurrentTime() + "<br />")
+            // Check if origin is proper
+            if (e.origin != window.location.origin) {
+                return
+            }
+            console.log('parent received message!: ', e.data);
+            $('#message').append("message：popup窗口已关闭；时间：" + getCurrentTime() + "<br />")
+        }, false);
+    })();
+    </script>
+</body>
+</html>
